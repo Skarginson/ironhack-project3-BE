@@ -6,4 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
-module.exports = { MONGO_URI, PORT, TOKEN_SECRET };
+const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+module.exports = { MONGO_URI, PORT, TOKEN_SECRET, passwordRegex, emailRegex };
