@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Ngo = require("../models/Ngo.model");
-const emailRegex = require("../consts");
+const emailRegex = require("../../consts");
 
 router.get("/", async (_, res, next) => {
   try {

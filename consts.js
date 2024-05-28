@@ -15,7 +15,4 @@ module.exports = {
   TOKEN_SECRET,
   passwordRegex,
   emailRegex,
-  ngoNotFoundMessage,
-  userNotFoundMessage,
-  invalidEmailFormatMessage,
 };
