@@ -1,29 +1,36 @@
 const { Schema, model } = require("mongoose");
 
-const missionSchema = new Schema({
-  name: {
-    type: String,
-    required: [true, "name is required"],
-    maxlength: 100,
+const missionSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "name is required"],
+      maxlength: 100,
+    },
+    startDate: {
+      type: Date,
+      required: [true, "Start date is required"],
+    },
+    endDate: Date,
+    description: {
+      type: String,
+      required: [true, "Description is required"],
+      maxlength: 1000,
+    },
+    organization: {
+      type: Schema.Types.ObjectId,
+      ref: "Ngo",
+      required: [
+        true,
+        "Must be affiliated to an organization. Something must be really wrong",
+      ],
+    },
   },
-  startDate: {
-    type: Date,
-    required: [true, "Start date is required"],
-  },
-  endDate: {
-    type: Date,
-    default: null,
-  },
-  description: {
-    type: String,
-    required: [true, "Description is required"],
-  },
-  post: {
-    type: Schema.Types.ObjectId,
-    ref: "Post",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const Mission = model("mission", missionSchema);
+const Mission = model("Mission", missionSchema);
 
 module.exports = Mission;
