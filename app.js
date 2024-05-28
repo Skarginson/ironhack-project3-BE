@@ -3,11 +3,11 @@ const path = require("path");
 const logger = require("morgan");
 
 const { PORT } = require("./consts");
-const usersRouter = require("./routes/users.router");
-const authRouter = require("./routes/auth.router");
-const missionsRouter = require("./routes/missions.router");
-const ngosRouter = require("./routes/ngos.router");
-const postsRouter = require("./routes/posts.router");
+const usersRouter = require("./src/routes/users.router");
+const authRouter = require("./src/routes/auth.router");
+const missionsRouter = require("./src/routes/missions.router");
+const ngosRouter = require("./src/routes/ngos.router");
+const postsRouter = require("./src/routes/posts.router");
 
 const { catchAll, errorHandler } = require("./src/error-handling");
 

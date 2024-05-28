@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const { TOKEN_SECRET } = require("../consts");
+const { TOKEN_SECRET } = require("../../consts");
 const User = require("../models/User.model");
 
 async function protectionMiddleware(req, res, next) {

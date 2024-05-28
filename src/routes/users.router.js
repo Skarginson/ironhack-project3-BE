@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { emailRegex } = require("../consts");
+const { emailRegex } = require("../../consts");
 const User = require("../models/User.model");
 
-const handleNotFound = require("../utils");
+const handleNotFound = require("../../utils");
 const protectionMiddleware = require("../middlewares/protection.middleware");
 
 // Que protéger et ne pas protéger ? J'ai envie de tout protéger moi wtf
