@@ -18,7 +18,8 @@ router.get("/:id", async (req, res, next) => {
   try {
     const ngo = await Ngo.findById(id);
     if (!ngo) {
-      return res.status(404).json({ message: "NGO not found" });
+      handleNotFound(res);
+      return;
     }
     res.json(ngo);
   } catch (err) {
@@ -107,12 +108,7 @@ router.delete("/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const deletedNgo = await Ngo.findByIdAndDelete(id);
-
-    if (!deletedNgo) {
-      handleNotFound(res);
-      return;
-    }
+    await Ngo.findByIdAndDelete(id);
 
     res.json({ message: "NGO deleted successfully" });
   } catch (err) {

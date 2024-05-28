@@ -6,6 +6,10 @@ const User = require("../models/User.model");
 const handleNotFound = require("../utils");
 const protectionMiddleware = require("../middlewares/protection.middleware");
 
+// Que protéger et ne pas protéger ? J'ai envie de tout protéger moi wtf
+
+router.use(protectionMiddleware); // 👇 all routes bellow are now protected
+
 router.get("/", async (_, res, next) => {
   try {
     const users = await User.find().populate("organizations");
@@ -72,8 +76,6 @@ router.delete("/:id", async (req, res, next) => {
     next(err);
   }
 });
-
-router.use(protectionMiddleware); // 👇 all routes bellow are now protected
 
 router.get("/me", (req, res) => {
   // `user` was stored in `req` in the `protectionMiddleware`

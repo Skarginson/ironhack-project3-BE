@@ -3,9 +3,12 @@ const path = require("path");
 const logger = require("morgan");
 
 const { PORT } = require("./consts");
-// const indexRouter = require("./routes/index.router");
-// const usersRouter = require("./routes/users.router");
-// const journalsRouter = require("./routes/journals.router");
+const usersRouter = require("./routes/users.router");
+const authRouter = require("./routes/auth.router");
+const missionsRouter = require("./routes/missions.router");
+const ngosRouter = require("./routes/ngos.router");
+const postsRouter = require("./routes/posts.router");
+
 const { catchAll, errorHandler } = require("./src/error-handling");
 
 const app = express();
@@ -15,9 +18,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "../public")));
 
-// app.use("/", indexRouter);
-// app.use("/users", usersRouter);
-// app.use("/journals", journalsRouter);
+app.use("/users", usersRouter);
+app.use("/auth", authRouter);
+app.use("/missions", missionsRouter);
+app.use("/ngos", ngosRouter);
+app.use("/posts", postsRouter);
 
 app.use(catchAll);
 app.use(errorHandler);
