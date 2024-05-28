@@ -8,7 +8,7 @@ const ngoSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      //verif email via regex
+      validate: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: {
       type: String,
@@ -43,6 +43,13 @@ const ngoSchema = new Schema(
     timestamps: true,
   }
 );
+
+function handleDelete(deletedNgo) {
+  Mission.deleteMany({ owner: deletedNgo.id });
+  Post.deleteMany({ owner: deletedNgo.id });
+}
+ngoSchema.post("findOneAndDelete", handleDelete);
+ngoSchema.post("deleteOne", handleDelete);
 
 const Ngo = model("Ngo", ngoSchema);
 

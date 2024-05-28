@@ -8,7 +8,7 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      // Rajouter la validation pour les mails via regex
+      validate: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: {
       type: String,
