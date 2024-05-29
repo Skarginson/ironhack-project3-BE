@@ -19,7 +19,7 @@ const missionSchema = new Schema(
     },
     organization: {
       type: Schema.Types.ObjectId,
-      ref: "Ngo",
+      ref: "Organization",
       required: [
         true,
         "Must be affiliated to an organization. Something must be really wrong",

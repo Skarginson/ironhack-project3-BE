@@ -44,13 +44,13 @@ const ngoSchema = new Schema(
   }
 );
 
-function handleDelete(deletedNgo) {
-  Mission.deleteMany({ owner: deletedNgo.id });
-  Post.deleteMany({ owner: deletedNgo.id });
+function handleDelete(deletedOrganization) {
+  Mission.deleteMany({ owner: deletedOrganization.id });
+  Post.deleteMany({ owner: deletedOrganization.id });
 }
 ngoSchema.post("findOneAndDelete", handleDelete);
 ngoSchema.post("deleteOne", handleDelete);
 
-const Ngo = model("Ngo", ngoSchema);
+const Organization = model("Organization", ngoSchema);
 
-module.exports = Ngo;
+module.exports = Organization;

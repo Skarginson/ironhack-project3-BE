@@ -5,9 +5,9 @@ const bcrypt = require("bcryptjs");
 
 const { TOKEN_SECRET, passwordRegex, emailRegex } = require("../../consts");
 const User = require("../models/User.model");
-const Ngo = require("../models/Ngo.model");
+const Organization = require("../models/Organization.model");
 
-router.post("/signup/user", async (req, res, next) => {
+router.post("/users/signup", async (req, res, next) => {
   const { email, password, name } = req.body;
 
   if (!passwordRegex.test(password)) {
@@ -39,7 +39,7 @@ router.post("/signup/user", async (req, res, next) => {
   }
 });
 
-router.post("/signup/ngo", async (req, res, next) => {
+router.post("/organizations/signup", async (req, res, next) => {
   const {
     email,
     password,
@@ -66,7 +66,7 @@ router.post("/signup/ngo", async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   try {
-    const createdNgo = await Ngo.create({
+    const createdOrganization = await Organization.create({
       email,
       password: hashedPassword,
       name,
@@ -77,35 +77,41 @@ router.post("/signup/ngo", async (req, res, next) => {
       image,
     });
 
-    delete createdNgo._doc.password;
+    delete createdOrganization._doc.password;
 
-    res.status(201).json(createdNgo);
+    res.status(201).json(createdOrganization);
   } catch (err) {
     next(err);
   }
 });
 
+// /login?accountType=organization accountType récupéré dans le req.query
+
 router.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
+  const { accountType } = req.query;
+
+  const accountModels = { user: User, organization: Organization };
+
+  const validAccountTypes = Object.keys(accountModels);
+
+  if (!validAccountTypes.includes(accountType)) {
+    return res.status(400).json({});
+  }
 
   try {
-    let user = await User.findOne({ email });
-    let isNgo = false;
-
-    if (!user) {
-      user = await Ngo.findOne({ email });
-      isNgo = true;
-    }
+    const account = await accountModels[accountType].findOne({ email });
+    const isOrganization = accountType === "organization";
 
     const isCorrectCredentials =
-      user != null && (await bcrypt.compare(password, user.password));
+      account != null && (await bcrypt.compare(password, account.password));
 
     if (!isCorrectCredentials) {
       res.status(401).json({ message: "Invalid credentials" });
       return;
     }
 
-    const authToken = jwt.sign({ email, isNgo }, TOKEN_SECRET, {
+    const authToken = jwt.sign({ email, isOrganization }, TOKEN_SECRET, {
       algorithm: "HS256",
       issuer: "Skarginson",
       expiresIn: "7d",

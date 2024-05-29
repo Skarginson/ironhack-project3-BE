@@ -17,7 +17,7 @@ const postSchema = new Schema(
     },
     organization: {
       type: Schema.Types.ObjectId,
-      ref: "Ngo",
+      ref: "Organization",
       required: [true, "Must be linked to an organization"],
     },
     mission: {

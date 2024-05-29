@@ -8,11 +8,13 @@ const protectionMiddleware = require("../middlewares/protection.middleware");
 
 // Que protéger et ne pas protéger ? J'ai envie de tout protéger moi wtf
 
-router.use(protectionMiddleware); // 👇 all routes bellow are now protected
+// router.use(protectionMiddleware); // 👇 all routes bellow are now protected
 
 router.get("/", async (_, res, next) => {
   try {
-    const users = await User.find().populate("organizations");
+    const users = await User.find()
+      .select("-password")
+      .populate("organizations");
     res.json(users);
   } catch (err) {
     next(err);
@@ -23,7 +25,9 @@ router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findById(id).populate("organizations");
+    const user = await User.findById(id)
+      .select("-password")
+      .populate("organizations");
     if (!user) {
       handleNotFound(res);
       return;
@@ -36,7 +40,7 @@ router.get("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
-  const { email, name, financials, organizations } = req.body;
+  const { email, name, organizations } = req.body;
 
   if (email && !emailRegex.test(email)) {
     return res.status(400).json({ message: "Invalid email format." });
@@ -44,8 +48,8 @@ router.put("/:id", async (req, res, next) => {
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { email, name, financials, organizations },
+      id.select("-password"),
+      { email, name, organizations },
       { new: true, runValidators: true }
     ).populate("organizations");
 

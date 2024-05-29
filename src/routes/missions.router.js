@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Mission = require("../models/Mission.model");
 
-router.get("/", async (_, res, next) => {
+router.get("/missions", async (_, res, next) => {
   try {
     const missions = await Mission.find().populate("organization");
     res.json(missions);
@@ -11,7 +11,9 @@ router.get("/", async (_, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+// router.use(protectionMiddleware);
+
+router.get("/missions/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -26,39 +28,42 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/organization/:organizationId", async (req, res, next) => {
-  const { organizationId } = req.params;
+router.get(
+  "/organizations/:organizationId/missions",
+  async (req, res, next) => {
+    const { organizationId } = req.params;
 
-  try {
-    const missions = await Mission.find({
-      organization: organizationId,
-    }).populate("organization");
-    res.json(missions);
-  } catch (err) {
-    next(err);
+    try {
+      const missions = await Mission.find({
+        organization: organizationId,
+      }).populate("organization");
+      res.json(missions);
+    } catch (err) {
+      next(err);
+    }
   }
-});
+);
 
-router.post("/", async (req, res, next) => {
+router.post("/missions", async (req, res, next) => {
   const { name, startDate, endDate, description, organization } = req.body;
 
   try {
-    const newMission = new Mission({
+    const newMission = {
       name,
       startDate,
       endDate,
       description,
       organization,
-    });
+    };
 
-    const savedMission = await newMission.save();
-    res.status(201).json(savedMission);
+    const createdMission = await Mission.create(newMission);
+    res.status(201).json(createdMission);
   } catch (err) {
     next(err);
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/missions/:id", async (req, res, next) => {
   const { id } = req.params;
   const { name, startDate, endDate, description, organization } = req.body;
 
@@ -80,7 +85,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/missions/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
