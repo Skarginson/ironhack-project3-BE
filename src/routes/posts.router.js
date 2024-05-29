@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post.model");
 
-router.get("/", async (req, res, next) => {
+router.get("/posts", async (req, res, next) => {
   try {
     const posts = await Post.find().populate("organization mission");
     res.json(posts);
@@ -11,7 +11,9 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+// router.use(protectionMiddleware);
+
+router.get("/posts/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
@@ -26,7 +28,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/mission/:missionId", async (req, res, next) => {
+router.get("/missions/:missionId/posts", async (req, res, next) => {
   const { missionId } = req.params;
 
   try {
@@ -39,7 +41,7 @@ router.get("/mission/:missionId", async (req, res, next) => {
   }
 });
 
-router.get("/organization/:organizationId", async (req, res, next) => {
+router.get("/organizations/:organizationId/posts", async (req, res, next) => {
   const { organizationId } = req.params;
 
   try {
@@ -52,26 +54,26 @@ router.get("/organization/:organizationId", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/posts", async (req, res, next) => {
   const { title, content, image, organization, mission } = req.body;
 
   try {
-    const newPost = new Post({
+    const newPost = {
       title,
       content,
       image,
       organization,
       mission,
-    });
+    };
 
-    const savedPost = await newPost.save();
-    res.status(201).json(savedPost);
+    const createdPost = await Post.create(newPost);
+    res.status(201).json(createdPost);
   } catch (err) {
     next(err);
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/posts/:id", async (req, res, next) => {
   const { id } = req.params;
   const { title, content, image, organization, mission } = req.body;
 
@@ -93,7 +95,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/posts/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {

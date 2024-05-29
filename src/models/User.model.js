@@ -21,7 +21,7 @@ const userSchema = new Schema(
     organizations: {
       type: [
         {
-          organisation: { type: Schema.Types.ObjectId, ref: "Ngo" },
+          organization: { type: Schema.Types.ObjectId, ref: "Organization" },
           monthlyDonation: {
             amount: {
               type: Number,
