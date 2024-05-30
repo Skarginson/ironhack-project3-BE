@@ -6,8 +6,6 @@ const User = require("../models/User.model");
 const handleNotFound = require("../../utils");
 const protectionMiddleware = require("../middlewares/protection.middleware");
 
-// Que protéger et ne pas protéger ? J'ai envie de tout protéger moi wtf
-
 // router.use(protectionMiddleware); // 👇 all routes bellow are now protected
 
 router.get("/", async (_, res, next) => {
