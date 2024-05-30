@@ -21,6 +21,11 @@ router.get("/", async (_, res, next) => {
   }
 });
 
+router.get("/me", protectionMiddleware, (req, res) => {
+  // `user` was stored in `req` in the `protectionMiddleware`
+  res.json(req.user);
+});
+
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
@@ -79,11 +84,6 @@ router.delete("/:id", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-});
-
-router.get("/me", (req, res) => {
-  // `user` was stored in `req` in the `protectionMiddleware`
-  res.json(req.user);
 });
 
 module.exports = router;

@@ -100,7 +100,9 @@ router.post("/login", async (req, res, next) => {
   }
 
   try {
-    const account = await accountModels[accountType].findOne({ email });
+    const account = await accountModels[accountType]
+      .findOne({ email })
+      .select("+password");
     const isOrganization = accountType === "organization";
 
     const isCorrectCredentials =

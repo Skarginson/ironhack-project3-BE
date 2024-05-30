@@ -21,7 +21,7 @@ async function protectionMiddleware(req, res, next) {
       res.status(404).json({ message: "User Not Found" });
       return;
     }
-
+    console.log(user);
     // store the found user in the request object, so it's available in the next middleware
     req.user = user;
     next();
