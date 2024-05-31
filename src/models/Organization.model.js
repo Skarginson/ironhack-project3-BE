@@ -8,7 +8,7 @@ const ngoSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      validate: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      // validate: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: {
       type: String,
@@ -20,7 +20,6 @@ const ngoSchema = new Schema(
     },
     description: {
       type: String,
-      required: [true, "Description is required"],
     },
     image: {
       type: String,
@@ -29,8 +28,8 @@ const ngoSchema = new Schema(
       //RNA for associations created in France, maybe something else if needed ?
       type: String,
       required: [true, "RNA is required"],
-      minlength: 10,
-      maxlength: 10,
+      // minlength: 10,
+      // maxlength: 10,
     },
     donationLink: {
       type: String,
