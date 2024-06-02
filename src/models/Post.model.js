@@ -23,6 +23,7 @@ const postSchema = new Schema(
     mission: {
       type: Schema.Types.ObjectId,
       ref: "Mission",
+      set: (v) => (v === "" ? null : v),
     },
   },
   {
