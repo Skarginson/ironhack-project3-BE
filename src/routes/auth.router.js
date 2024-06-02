@@ -10,16 +10,16 @@ const Organization = require("../models/Organization.model");
 router.post("/users/signup", async (req, res, next) => {
   const { email, password, name } = req.body;
 
-  if (!passwordRegex.test(password)) {
-    return res.status(400).json({
-      message:
-        "Password must be at least 8 characters long, contain at least one number, and one special character (!, @, #, $, %, etc).",
-    });
-  }
+  // if (!passwordRegex.test(password)) {
+  //   return res.status(400).json({
+  //     message:
+  //       "Password must be at least 8 characters long, contain at least one number, and one special character (!, @, #, $, %, etc).",
+  //   });
+  // }
 
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Invalid email format." });
-  }
+  // if (!emailRegex.test(email)) {
+  //   return res.status(400).json({ message: "Invalid email format." });
+  // }
 
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -51,16 +51,16 @@ router.post("/organizations/signup", async (req, res, next) => {
     image,
   } = req.body;
 
-  if (!passwordRegex.test(password)) {
-    return res.status(400).json({
-      message:
-        "Password must be at least 8 characters long, contain at least one number, and one special character (!, @, #, $, %, etc).",
-    });
-  }
+  // if (!passwordRegex.test(password)) {
+  //   return res.status(400).json({
+  //     message:
+  //       "Password must be at least 8 characters long, contain at least one number, and one special character (!, @, #, $, %, etc).",
+  //   });
+  // }
 
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ message: "Invalid email format." });
-  }
+  // if (!emailRegex.test(email)) {
+  //   return res.status(400).json({ message: "Invalid email format." });
+  // }
 
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -100,7 +100,9 @@ router.post("/login", async (req, res, next) => {
   }
 
   try {
-    const account = await accountModels[accountType].findOne({ email });
+    const account = await accountModels[accountType]
+      .findOne({ email })
+      .select("+password");
     const isOrganization = accountType === "organization";
 
     const isCorrectCredentials =
