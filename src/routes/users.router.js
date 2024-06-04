@@ -51,7 +51,7 @@ router.put("/:id", async (req, res, next) => {
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
-      id.select("-password"),
+      id,
       { email, name, organizations },
       { new: true, runValidators: true }
     ).populate("organizations");
