@@ -45,7 +45,6 @@ const ngoSchema = new Schema(
 
 function handleDelete(deletedOrganization) {
   Mission.deleteMany({ owner: deletedOrganization.id });
-  Post.deleteMany({ owner: deletedOrganization.id });
 }
 ngoSchema.post("findOneAndDelete", handleDelete);
 ngoSchema.post("deleteOne", handleDelete);

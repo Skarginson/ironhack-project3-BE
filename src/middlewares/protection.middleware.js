@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+const Organization = require("../models/Organization.model");
 const { TOKEN_SECRET } = require("../../consts");
 const User = require("../models/User.model");
 
@@ -16,7 +16,21 @@ async function protectionMiddleware(req, res, next) {
     // verifies the token and returns the payload
     const { email } = jwt.verify(token, TOKEN_SECRET);
 
-    const user = await User.findOne({ email: email }, { password: 0 });
+    const accountType = req.headers.authorization?.split(" ")[2];
+
+    const accountModels = { user: User, organization: Organization };
+
+    const validAccountTypes = Object.keys(accountModels);
+
+    console.log(req.headers, "headers", accountType, "accountType");
+    if (!validAccountTypes.includes(accountType)) {
+      return res.status(400).json({});
+    }
+
+    const user = await accountModels[accountType].findOne(
+      { email: email },
+      { password: 0 }
+    );
     if (!user) {
       res.status(404).json({ message: "User Not Found" });
       return;
