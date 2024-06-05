@@ -22,15 +22,16 @@ async function protectionMiddleware(req, res, next) {
 
     const validAccountTypes = Object.keys(accountModels);
 
-    console.log(req.headers, "headers", accountType, "accountType");
     if (!validAccountTypes.includes(accountType)) {
       return res.status(400).json({});
     }
 
-    const user = await accountModels[accountType].findOne(
-      { email: email },
-      { password: 0 }
-    );
+    const user = await accountModels[accountType]
+      .findOne({ email: email }, { password: 0 })
+      .populate({
+        path: "organizations.organization",
+        select: "name _id email",
+      });
     if (!user) {
       res.status(404).json({ message: "User Not Found" });
       return;

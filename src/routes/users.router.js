@@ -6,7 +6,7 @@ const User = require("../models/User.model");
 const handleNotFound = require("../../utils");
 const protectionMiddleware = require("../middlewares/protection.middleware");
 
-// router.use(protectionMiddleware); // 👇 all routes bellow are now protected
+router.use(protectionMiddleware); // 👇 all routes bellow are now protected
 
 router.get("/", async (_, res, next) => {
   try {
@@ -19,7 +19,7 @@ router.get("/", async (_, res, next) => {
   }
 });
 
-router.get("/me", protectionMiddleware, (req, res) => {
+router.get("/me", (req, res) => {
   // `user` was stored in `req` in the `protectionMiddleware`
   res.json(req.user);
 });
@@ -64,6 +64,46 @@ router.put("/:id", async (req, res, next) => {
     res.json(updatedUser);
   } catch (err) {
     next(err);
+  }
+});
+
+router.post("/follow", async (req, res, next) => {
+  const { organizationId } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: { organizations: { organization: organizationId } },
+      },
+      { new: true }
+    );
+    if (!user) return res.status(404).send("User not found");
+
+    res.status(200).json({ message: "Organization followed" });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/donate", async (req, res, next) => {
+  const { organizationId, amount, startDate } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).send("User not found");
+
+    user.organizations.push({
+      organization: organizationId,
+      monthlyDonation: { amount, startDate },
+    });
+    await user.save();
+
+    res.status(200).send("Donation made");
+  } catch (error) {
+    next(error);
   }
 });
 
