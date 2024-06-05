@@ -14,8 +14,6 @@ router.get("/", async (_, res, next) => {
   }
 });
 
-router.use(protectionMiddleware);
-
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
@@ -30,6 +28,7 @@ router.get("/:id", async (req, res, next) => {
     next(err);
   }
 });
+router.use(protectionMiddleware);
 
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
