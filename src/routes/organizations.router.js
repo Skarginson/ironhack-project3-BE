@@ -43,9 +43,9 @@ router.put("/:id", async (req, res, next) => {
     image,
   } = req.body;
 
-  // if (email && !emailRegex.test(email)) {
-  //   return res.status(400).json({ message: "Invalid email format." });
-  // }
+  if (email && !emailRegex.test(email)) {
+    return res.status(400).json({ message: "Invalid email format." });
+  }
 
   try {
     let updatedOrganization = await Organization.findByIdAndUpdate(

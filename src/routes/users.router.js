@@ -6,7 +6,7 @@ const User = require("../models/User.model");
 const handleNotFound = require("../../utils");
 const protectionMiddleware = require("../middlewares/protection.middleware");
 
-router.use(protectionMiddleware); // 👇 all routes bellow are now protected
+router.use(protectionMiddleware);
 
 router.get("/", async (_, res, next) => {
   try {
