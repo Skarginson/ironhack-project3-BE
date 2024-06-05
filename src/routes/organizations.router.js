@@ -14,8 +14,6 @@ router.get("/", async (_, res, next) => {
   }
 });
 
-router.use(protectionMiddleware);
-
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
@@ -30,6 +28,7 @@ router.get("/:id", async (req, res, next) => {
     next(err);
   }
 });
+router.use(protectionMiddleware);
 
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
@@ -43,9 +42,9 @@ router.put("/:id", async (req, res, next) => {
     image,
   } = req.body;
 
-  // if (email && !emailRegex.test(email)) {
-  //   return res.status(400).json({ message: "Invalid email format." });
-  // }
+  if (email && !emailRegex.test(email)) {
+    return res.status(400).json({ message: "Invalid email format." });
+  }
 
   try {
     let updatedOrganization = await Organization.findByIdAndUpdate(

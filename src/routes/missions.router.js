@@ -13,8 +13,6 @@ router.get("/missions", async (_, res, next) => {
   }
 });
 
-router.use(protectionMiddleware);
-
 router.get("/missions/:id", async (req, res, next) => {
   const { id } = req.params;
 
@@ -45,6 +43,8 @@ router.get(
     }
   }
 );
+
+router.use(protectionMiddleware);
 
 router.post("/missions", async (req, res, next) => {
   const { name, startDate, endDate, description } = req.body;
