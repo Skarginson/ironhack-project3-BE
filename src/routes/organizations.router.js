@@ -3,6 +3,7 @@ const router = express.Router();
 const Organization = require("../models/Organization.model");
 const emailRegex = require("../../consts");
 const { handleNotFound } = require("../../utils");
+const protectionMiddleware = require("../middlewares/protection.middleware");
 
 router.get("/", async (_, res, next) => {
   try {
@@ -13,7 +14,7 @@ router.get("/", async (_, res, next) => {
   }
 });
 
-// router.use(protectionMiddleware);
+router.use(protectionMiddleware);
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;

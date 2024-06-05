@@ -5,7 +5,7 @@ const User = require("../models/User.model");
 
 async function protectionMiddleware(req, res, next) {
   try {
-    // token is sent in the headers as `Bearer <token>`
+    // token is sent in the headers as `Bearer <token> <accountType>`
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -18,27 +18,28 @@ async function protectionMiddleware(req, res, next) {
 
     const accountType = req.headers.authorization?.split(" ")[2];
 
-    const accountModels = { user: User, organization: Organization };
+    let user;
 
-    const validAccountTypes = Object.keys(accountModels);
-
-    if (!validAccountTypes.includes(accountType)) {
-      return res.status(400).json({});
-    }
-
-    const user = await accountModels[accountType]
-      .findOne({ email: email }, { password: 0 })
-      .populate({
+    if (accountType === "organization") {
+      user = await Organization.findOne({ email: email }, { password: 0 });
+    } else if (accountType === "user") {
+      user = await User.findOne({ email: email }, { password: 0 }).populate({
         path: "organizations.organization",
         select: "name _id email",
       });
+    } else {
+      res.status(400).json({ message: "Invalid account type" });
+      return;
+    }
+
     if (!user) {
       res.status(404).json({ message: "User Not Found" });
       return;
     }
-    console.log(user);
+
     // store the found user in the request object, so it's available in the next middleware
     req.user = user;
+    req.accountType = accountType;
     next();
   } catch (err) {
     if (err.name.includes("Token")) {

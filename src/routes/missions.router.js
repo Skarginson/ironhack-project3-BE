@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Mission = require("../models/Mission.model");
+const handleNotFound = require("../../utils");
+const protectionMiddleware = require("../middlewares/protection.middleware");
 
 router.get("/missions", async (_, res, next) => {
   try {
@@ -11,7 +13,7 @@ router.get("/missions", async (_, res, next) => {
   }
 });
 
-// router.use(protectionMiddleware);
+router.use(protectionMiddleware);
 
 router.get("/missions/:id", async (req, res, next) => {
   const { id } = req.params;
@@ -45,7 +47,14 @@ router.get(
 );
 
 router.post("/missions", async (req, res, next) => {
-  const { name, startDate, endDate, description, organization } = req.body;
+  const { name, startDate, endDate, description } = req.body;
+
+  if (req.accountType !== "organization") {
+    res.status(403).json({ message: "Only organization can create missions" });
+    return;
+  }
+
+  const orgId = req.user.id;
 
   try {
     const newMission = {
@@ -53,7 +62,7 @@ router.post("/missions", async (req, res, next) => {
       startDate,
       endDate,
       description,
-      organization,
+      organization: orgId,
     };
 
     const createdMission = await Mission.create(newMission);
@@ -89,7 +98,7 @@ router.delete("/missions/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const deletedMission = await Mission.findByIdAndDelete(id);
+    const deletedMission = await Mission.findOneAndDelete(id); // checker dans le cours.
 
     if (!deletedMission) {
       handleNotFound(res);
