@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Organization = require("../models/Organization.model");
 const emailRegex = require("../../consts");
+const { handleNotFound } = require("../../utils");
+const protectionMiddleware = require("../middlewares/protection.middleware");
 
 router.get("/", async (_, res, next) => {
   try {
@@ -12,18 +14,18 @@ router.get("/", async (_, res, next) => {
   }
 });
 
-// router.use(protectionMiddleware);
+router.use(protectionMiddleware);
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const ngo = await Organization.findById(id).select("-password");
-    if (!ngo) {
+    const organization = await Organization.findById(id).select("-password");
+    if (!organization) {
       handleNotFound(res);
       return;
     }
-    res.json(ngo);
+    res.json(organization);
   } catch (err) {
     next(err);
   }

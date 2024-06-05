@@ -119,7 +119,11 @@ router.post("/login", async (req, res, next) => {
       expiresIn: "7d",
     });
 
-    res.json({ authToken });
+    res.json({
+      authToken,
+      _id: accountType === "organization" ? account._id : undefined,
+      accountType,
+    });
   } catch (err) {
     next(err);
   }

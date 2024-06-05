@@ -24,15 +24,18 @@ const userSchema = new Schema(
         {
           organization: { type: Schema.Types.ObjectId, ref: "Organization" },
           monthlyDonation: {
-            amount: {
-              type: Number,
-              required: [true, "Donation Amount is required"],
-              min: 1,
+            type: {
+              amount: {
+                type: Number,
+                required: [true, "Donation Amount is required"],
+                min: 1,
+              },
+              startDate: {
+                type: Date,
+                required: [true, "Donation StartDate is required"],
+              },
             },
-            startDate: {
-              type: Date,
-              required: [true, "Donation StartDate is required"],
-            },
+            required: false,
           },
         },
       ],
