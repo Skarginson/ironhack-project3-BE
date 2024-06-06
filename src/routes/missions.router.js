@@ -98,7 +98,10 @@ router.delete("/missions/:id", async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const deletedMission = await Mission.findOneAndDelete(id); // checker dans le cours.
+    const deletedMission = await Mission.findOneAndDelete({
+      _id: id,
+      organization: req.user.id,
+    });
 
     if (!deletedMission) {
       handleNotFound(res);

@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Organization = require("../models/Organization.model");
-const emailRegex = require("../../consts");
 const { handleNotFound } = require("../../utils");
 const protectionMiddleware = require("../middlewares/protection.middleware");
+const { emailRegex } = require("../../consts");
 
 router.get("/", async (_, res, next) => {
   try {
@@ -32,6 +32,12 @@ router.use(protectionMiddleware);
 
 router.put("/:id", async (req, res, next) => {
   const { id } = req.params;
+
+  if (id !== req.user.id) {
+    res.status(403).json({ message: "Not allowed" });
+    return;
+  }
+
   const {
     email,
     name,

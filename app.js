@@ -3,7 +3,7 @@ const path = require("path");
 const logger = require("morgan");
 const cors = require("cors");
 
-const { PORT } = require("./consts");
+const { PORT, CORS_ORIGIN } = require("./consts");
 const usersRouter = require("./src/routes/users.router");
 const authRouter = require("./src/routes/auth.router");
 const missionsRouter = require("./src/routes/missions.router");
@@ -17,7 +17,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "../public")));
-app.use(cors());
+app.use(cors({ origin: CORS_ORIGIN }));
 
 app.use("/", authRouter);
 app.use("/users", usersRouter);
